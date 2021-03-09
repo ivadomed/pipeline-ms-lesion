@@ -105,10 +105,11 @@ sct_crop_image -i ${file_t2}$ext -m mask_T2w.nii.gz -o ${file_t2}_crop$ext
 file_t2="${file_t2}_crop"
 # Register axial image to T2w sag
 file_t2ax="${SUBJECT}_acq-ax_T2w"
-sct_register_multimodal -i ${file_t2ax}$ext -d ${file_t2}$ext -dseg ${file_t2_seg}$ext -m mask_T2w.nii.gz -param step=1,type=im,algo=affine,metric=CC,deformation=1x1x1 -z 0 -qc ${PATH_QC} -qc-subject ${SUBJECT}
+paramreg="step=1,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=4,iter=10:step=2,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=2,iter=10:step=3,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=1,iter=5,smooth=1"
+sct_register_multimodal -i ${file_t2ax}$ext -d ${file_t2}$ext -dseg ${file_t2_seg}$ext -m mask_T2w.nii.gz -param $paramreg -z 0 -qc ${PATH_QC} -qc-subject ${SUBJECT}
 # Register axial T2* image to T2w sag
 file_t2s="${SUBJECT}_T2star"
-sct_register_multimodal -i ${file_t2s}$ext -d ${file_t2}$ext -dseg ${file_t2_seg}$ext -m mask_T2w.nii.gz -param step=1,type=im,algo=affine,metric=CC,deformation=1x1x1 -z 0 -qc ${PATH_QC} -qc-subject ${SUBJECT}
+sct_register_multimodal -i ${file_t2s}$ext -d ${file_t2}$ext -dseg ${file_t2_seg}$ext -m mask_T2w.nii.gz -param $paramreg -z 0 -qc ${PATH_QC} -qc-subject ${SUBJECT}
 
 
 # Verify presence of output files and write log file if error
