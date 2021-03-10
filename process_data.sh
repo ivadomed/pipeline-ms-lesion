@@ -93,19 +93,19 @@ ext=".nii.gz"
 sct_image -i ${file_t2}.nii.gz -setorient RPI -o ${file_t2}_RPI.nii.gz
 # Resample to 0.5mm iso
 # TODO: resample to 0.5mm iso when https://github.com/neuropoly/spinalcordtoolbox/issues/3269 is fixed.
-sct_resample -i ${file_t2}_RPI.nii.gz -mm 1x1x1 -o ${file_t2}_RPI_r.nii.gz
+sct_resample -i ${file_t2}_RPI.nii.gz -mm 0.5x0.5x0.5 -o ${file_t2}_RPI_r.nii.gz
 file_t2="${file_t2}_RPI_r"
 # Segment spinal cord (only if it does not exist)
 segment_if_does_not_exist $file_t2 "t2"
 file_t2_seg=$FILESEG
 # Create mask (used for registration)
-sct_create_mask -i ${file_t2}$ext -p centerline,${file_t2_seg}$ext -o mask_T2w.nii.gz -size 30 -f cylinder
+sct_create_mask -i ${file_t2}$ext -p centerline,${file_t2_seg}$ext -o mask_T2w.nii.gz -size 30mm -f cylinder
 # Crop image for faster computing
 sct_crop_image -i ${file_t2}$ext -m mask_T2w.nii.gz -o ${file_t2}_crop$ext
 file_t2="${file_t2}_crop"
 # Register axial image to T2w sag
 file_t2ax="${SUBJECT}_acq-ax_T2w"
-paramreg="step=1,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=4,iter=10:step=2,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=2,iter=10:step=3,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=1,iter=5,smooth=1"
+paramreg="step=1,type=im,algo=rigid,metric=CC,deformation=1x1x1,shrink=4,iter=10:step=2,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=2,iter=10:step=3,type=im,algo=affine,metric=CC,deformation=1x1x1,shrink=1,iter=5,smooth=1"
 sct_register_multimodal -i ${file_t2ax}$ext -d ${file_t2}$ext -dseg ${file_t2_seg}$ext -m mask_T2w.nii.gz -param $paramreg -z 0 -qc ${PATH_QC} -qc-subject ${SUBJECT}
 # Register axial T2* image to T2w sag
 file_t2s="${SUBJECT}_T2star"
