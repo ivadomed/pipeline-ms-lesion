@@ -21,6 +21,8 @@ The data come from the following sites:
 - Vanderbilt University 🇺🇸
 - Zuckerberg San Francisco General Hospital 🇺🇸
 - National Institute of Health 🇺🇸
+- U. Mass (in data.neuro) 🇺🇸
+- CanProCo (_in process_) 🇨🇦
 - University College London 🇬🇧
 - Inserm 🇫🇷
 - Aix Marseille Université 🇫🇷
